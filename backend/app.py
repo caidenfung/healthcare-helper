@@ -238,7 +238,7 @@ def get_chat(report_id):
         # Split the input string by sections
         chat = content['content'].split("CHAT_BEGIN")[1].split("CHAT_END")[0].strip().split("~~")
         summary = content['content'].split("SUMMARY_BEGIN")[1].split("SUMMARY_END")[0].strip().split("~~")
-        diagnoses = content['content'].split("POSSIBLE_DIAGNOSES_BEGIN")[1].split("POSSIBLE_DIAGNOSES_END")[0].strip().split("~~")
+        diagnoses = content['content'].split("POTENTIAL_DIAGNOSES_BEGIN")[1].split("POTENTIAL_DIAGNOSES_END")[0].strip().split("~~")
         investigations = content['content'].split("FURTHER_INVESTIGATIONS_BEGIN")[1].split("FURTHER_INVESTIGATIONS_END")[0].strip().split("~~")
         
         # Assign the lists to corresponding keys
