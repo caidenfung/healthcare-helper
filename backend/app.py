@@ -20,14 +20,14 @@ def init_db():
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             is_doctor BOOL NOT NULL,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            password TEXT NOT NULL,
-            age INTEGER NOT NULL,
-            sex TEXT NOT NULL,
-            city TEXT NOT NULL,
-            residence_status TEXT NOT NULL,
-            employment_status TEXT NOT NULL,
+            name TEXT,
+            email TEXT,
+            password TEXT,
+            age INTEGER,
+            sex TEXT,
+            city TEXT,
+            residence_status TEXT,
+            employment_status TEXT,
             allergies TEXT, 
             medications TEXT,
             vaccination_history TEXT,
@@ -224,9 +224,32 @@ def get_chat(report_id):
         (report_id,),
     )
     row = cur.fetchone()
+
     if row:
         content = dict(row)
-        return flask.jsonify(content)
+    
+        sections = {
+            "chat": [],
+            "summary": [],
+            "diagnoses": [],
+            "investigations": []
+        }
+        print(content['content'])
+        # Split the input string by sections
+        chat = content['content'].split("CHAT_BEGIN")[1].split("CHAT_END")[0].strip().split("~~")
+        summary = content['content'].split("SUMMARY_BEGIN")[1].split("SUMMARY_END")[0].strip().split("~~")
+        diagnoses = content['content'].split("POSSIBLE_DIAGNOSES_BEGIN")[1].split("POSSIBLE_DIAGNOSES_END")[0].strip().split("~~")
+        investigations = content['content'].split("FURTHER_INVESTIGATIONS_BEGIN")[1].split("FURTHER_INVESTIGATIONS_END")[0].strip().split("~~")
+        
+        # Assign the lists to corresponding keys
+        sections["chat"] = [line.strip() for line in chat if line.strip()]
+        sections["chat"].append('Healthcare Helper: Answers received, a doctor will be with you shortly!')
+        sections["summary"] = [line.strip() for line in summary if line.strip()]
+        sections["diagnoses"] = [line.strip() for line in diagnoses if line.strip()]
+        sections["investigations"] = [line.strip() for line in investigations if line.strip()]
+        
+
+        return flask.jsonify(sections)
     else:
         return flask.jsonify({'message': 'Chat not found'}), 404
 
@@ -388,7 +411,10 @@ def helper():
         if model_text is None:
             model_text = 'Answers received, a doctor will be with you shortly!'
         #store model_text in database
+
         
+
+
         user_id = flask.session.get('id')
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
