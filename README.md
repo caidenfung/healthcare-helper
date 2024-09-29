@@ -5,7 +5,8 @@ source env/bin/activate
 pip install -r requirements.txt
 
 start frontend:
-npm run frontend/build
+cd frontend
+npm run build
 
 start backend:
 python backend/app.py
