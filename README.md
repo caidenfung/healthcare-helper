@@ -1,3 +1,6 @@
+Hackathon project for Mhacks 2024!
+https://devpost.com/software/healthcare-helper
+
 getting started:
 
 python3 -m venv env
